@@ -1,5 +1,6 @@
 export interface User {
-    name: string;
+    avatar: string;
+    username: string;
     email: string;
     password: string;
     userSettings: UserSettings;
@@ -7,4 +8,15 @@ export interface User {
 
 export interface UserSettings {
     exampleNotification: boolean;
+}
+
+export interface Post {
+    text: string;
+    file: string;
+    metadata: PostMetadata;
+}
+
+export interface PostMetadata {
+    userID: string;
+    hashtags: string;
 }

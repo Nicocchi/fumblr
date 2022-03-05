@@ -1,4 +1,3 @@
-import { Logger } from "./Logger";
 import { User } from "types";
 
 const bcrypt = require("bcrypt");
@@ -34,7 +33,7 @@ export function ValidateToken(token: string): any {
         const user = jwt.verify(tokenToValidate, TOKEN_SECRET);
         return user;
     } catch (err) {
-        Logger.log(err);
+        console.log(err);
     }
 
     return null;
@@ -42,8 +41,11 @@ export function ValidateToken(token: string): any {
 
 export function CheckAuthorization(user: User | undefined) {
     const node_env = <string>process.env.TS_NODE_DEV;
+    console.log("CHECK AUTHORIZATION", user)
+    if (!user) throw new Error("Private route, auth not found.");
     if (node_env === "true") {
         return undefined;
+        console.log("node_env true")
     } else {
         if (!user) throw new Error("Private route, auth not found.");
     }

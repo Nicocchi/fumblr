@@ -36,8 +36,7 @@ export async function UpdateUser(
         CheckAuthorization(context.auth);
 
         const { id, user } = args;
-        // TODO: Encrypt password
-        // user.password = Hash(user.password);
+        user.password = Hash(user.password);
 
         const updateUser = await UserModel.findByIdAndUpdate(id, user);
 

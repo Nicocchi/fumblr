@@ -29,7 +29,7 @@ export async function Login(
         const token = GenerateToken({
             id: user.id,
             email: user.email,
-            name: user.name,
+            username: user.username,
         });
         return { email: user.email, token };
     } catch (err) {

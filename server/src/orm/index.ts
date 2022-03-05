@@ -1,5 +1,5 @@
 import { connect, Schema, model, Mongoose } from "mongoose";
-import { User, UserSettings } from "@types";
+import { User, UserSettings, Post } from "@types";
 
 export const DatabaseInit = async () => {
     try {
@@ -15,7 +15,8 @@ export const DatabaseInit = async () => {
 // Mongoose models
 const UserSchema = new Schema<User>(
     {
-        name: { type: String, required: true },
+        avatar: { type: String, required: false },
+        username: { type: String, required: true },
         email: { type: String, required: true },
         password: { type: String, required: true },
         userSettings: Object,
@@ -23,4 +24,14 @@ const UserSchema = new Schema<User>(
     { timestamps: true }
 );
 
+const PostSchema = new Schema<Post>(
+    {
+        text: { type: String, required: true },
+        file: { type: String, required: false },
+        metadata: { type: Object, required: true }
+    },
+    { timestamps: true }
+);
+
 export const UserModel = model<User>("User", UserSchema);
+export const PostModel = model<Post>("Post", PostSchema);
