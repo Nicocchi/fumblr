@@ -1,7 +1,6 @@
 import { User } from "@types";
 import { UserModel } from "@orm";
 import { CompareSync, GenerateToken, ValidateToken } from "utils";
-import { Logger } from "utils/Logger";
 
 export async function AuthScope(token: string): Promise<User | undefined> {
     if(!token) return;
@@ -33,7 +32,7 @@ export async function Login(
         });
         return { email: user.email, token };
     } catch (err) {
-        Logger.log(err);
+        console.log(err);
     }
     return null;
 }

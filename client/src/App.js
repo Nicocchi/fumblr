@@ -1,5 +1,3 @@
-import './App.css';
-
 import {
   createTheme,
   NextUIProvider,
@@ -12,11 +10,21 @@ import {
   Spacer,
   Avatar,
 } from "@nextui-org/react";
-import { Grid } from '@nextui-org/react';
 import useDarkMode from "use-dark-mode";
 
-import { Home, Notification, Send, Discovery, Message, Bookmark, User } from 'react-iconly'
-import { useState } from 'react';
+import {
+  Home,
+  Notification,
+  Send,
+  Discovery,
+  Message,
+  Bookmark,
+  User,
+} from "react-iconly";
+import { useState } from "react";
+import RouterSwitch from "./routes";
+
+import { NavLink } from "react-router-dom";
 
 const lightTheme = createTheme({
   type: "light",
@@ -35,54 +43,67 @@ function App() {
 
   const MockItem = ({ text }) => {
     return (
-      <Card color="primary" css={{ h: '$24' }}>
+      <Card color="primary" css={{ h: "$24" }}>
         <Text h6 size={15} color="white" css={{ mt: 0 }}>
           {text}
         </Text>
       </Card>
     );
-  }
+  };
 
   return (
     <NextUIProvider theme={darkMode.value ? darkTheme : lightTheme}>
       <div style={{ display: "flex", justifyContent: "center", margin: 10 }}>
-        <div style={{ width: "100%", maxWidth: "300px", margin: 20, display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
-          <Button icon={<Home fill="currentColor" />} >Home</Button>
+        <div
+          style={{
+            width: "100%",
+            maxWidth: "300px",
+            margin: 20,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-end",
+          }}
+        >
+          <NavLink to="/">
+            <Button icon={<Home fill="currentColor" />}>Home</Button>
+          </NavLink>
           <Spacer y={1} />
-          <Button icon={<Discovery fill="currentColor" />} >Explore</Button>
+          <NavLink to="/explore">
+            <Button icon={<Discovery fill="currentColor" />}>Explore</Button>
+          </NavLink>
           <Spacer y={1} />
-          <Button icon={<Notification fill="currentColor" />} color="primary">
-            Notifications
-          </Button>
+          <NavLink to="/notifications">
+            <Button icon={<Notification fill="currentColor" />} color="primary">
+              Notifications
+            </Button>
+          </NavLink>
           <Spacer y={1} />
-          <Button icon={<Message fill="currentColor" />}>Messages</Button>
+          <NavLink to="/messages">
+            <Button icon={<Message fill="currentColor" />}>Messages</Button>
+          </NavLink>
           <Spacer y={1} />
-          <Button icon={<Bookmark fill="currentColor" />}>Bookmarks</Button>
+          <NavLink to="/bookmarks">
+            <Button icon={<Bookmark fill="currentColor" />}>Bookmarks</Button>
+          </NavLink>
           <Spacer y={1} />
-          <Button icon={<User fill="currentColor" />}>Profile</Button>
+          <NavLink to="/profile">
+            <Button icon={<User fill="currentColor" />}>Profile</Button>
+          </NavLink>
           <Spacer y={1} />
         </div>
         <div style={{ width: "100%", maxWidth: 700, margin: 20 }}>
-          <div>
-            <div style={{ display: "flex", marginBottom: 10 }}>
-              <Avatar squared text="Nico" size="xl" style={{marginRight: 10}} />
-              <Textarea
-                fullWidth
-                placeholder="What's happening?"
-                value={textAreaValue}
-                onChange={(e) => setTextAreaValue(e.target.value)}
-              />
-            </div>
-            <div style={{display: "flex", justifyContent: "space-between"}}>
-              <div></div>
-            <Button icon={<Send fill="currentColor" />} color="secondary">
-            
-          </Button>
-            </div>
-          </div>
-
+          <RouterSwitch />
         </div>
-        <div style={{ width: "100%", maxWidth: "300px", margin: 20, display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
+        <div
+          style={{
+            width: "100%",
+            maxWidth: "300px",
+            margin: 20,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-end",
+          }}
+        >
           <MockItem text="3 of 3" />
         </div>
 
@@ -119,7 +140,6 @@ function App() {
             <MockItem text="3 of 3" />
           </Grid>
         </Grid.Container> */}
-
       </div>
     </NextUIProvider>
   );
