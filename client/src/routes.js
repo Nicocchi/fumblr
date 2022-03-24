@@ -1,23 +1,27 @@
 import React from "react";
 import { Route, Routes } from "react-router";
 import { nanoid } from "nanoid";
-// import { connect } from "react-redux";
+import { connect } from "react-redux";
 
 import Home from "./pages/Home";
 import Landing from "./pages/Landing";
+import { verifyToken } from "./utils/utils";
 
 function RouterSwitch(props) {
+  const token = localStorage.getItem('token');
+  const isExpired = verifyToken(token);
   return (
     <Routes>
-      <Route key={nanoid()} exact path="/" element={<Home />} />
+      <Route key={nanoid()} exact path="/" element={token && !isExpired ? <Home /> : <Landing />} />
     </Routes>
   );
 }
 
-export default RouterSwitch;
+function mapStateToProps(state) {
+  return {
+    isLoggedIn: state.authReducer.isLoggedIn,
+    tokenExpired: state.authReducer.tokenExpired,
+  };
+}
 
-// function mapStateToProps(state) {
-//   return {};
-// }
-
-// export default connect(mapStateToProps, {})(Routes);
+export default connect(mapStateToProps, {})(RouterSwitch);

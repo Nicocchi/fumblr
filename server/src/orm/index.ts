@@ -1,4 +1,4 @@
-import { connect, Schema, model, Mongoose } from "mongoose";
+import mongoose, { connect, Schema, model, Mongoose } from "mongoose";
 import { User, UserSettings, Post } from "@types";
 
 export const DatabaseInit = async () => {
@@ -26,8 +26,9 @@ const UserSchema = new Schema<User>(
 
 const PostSchema = new Schema<Post>(
     {
-        text: { type: String, required: true },
+        content: { type: String, required: true },
         file: { type: String, required: false },
+        user_id: { type: Schema.Types.ObjectId, required: true },
         metadata: { type: Object, required: true }
     },
     { timestamps: true }

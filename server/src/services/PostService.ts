@@ -1,4 +1,5 @@
 import { Post } from "@types";
+import mongoose from "mongoose";
 import { PostModel } from "orm";
 import { CheckAuthorization } from "utils";
 
@@ -17,6 +18,30 @@ export async function GetPost(
         if (!findPost) throw new Error();
 
         return findPost;
+    } catch (err) {
+        console.error(err);
+    }
+
+    return null;
+}
+
+export async function GetAllUserPosts(
+    parent: any,
+    args: { id: string },
+    context: any,
+    info: any
+): Promise<Post | null> {
+    try {
+        const { id } = args;
+
+        if (!id) throw new Error();
+        const posts = await PostModel.find({ metadata: {userID: id} });
+
+        if (!posts) throw new Error();
+
+        console.log("Posts?", posts)
+
+        // return posts;
     } catch (err) {
         console.error(err);
     }
@@ -62,8 +87,10 @@ export async function AddPost(
 
         post.metadata = {
             ...post.metadata,
-            userID: context.auth.id,
+            // userID: context.auth.id,
         }
+
+        post.user_id = new mongoose.Types.ObjectId(context.auth.id);
 
         const createdPost = await PostModel.create(post);
 

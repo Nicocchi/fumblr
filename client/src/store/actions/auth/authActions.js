@@ -1,4 +1,3 @@
-import axios from "axios";
 require("dotenv").config();
 
 export const REGISTER_USER_START = "REGISTER_USER_START";
@@ -17,23 +16,24 @@ export const VERIFY_LOGIN_SUCCESS = "VERIFY_LOGIN_SUCCESS";
 
 export const CHECK_TOKEN = "CHECK_TOKEN";
 
-const url = 'https://localhost:4000/graphql'
+const url = "http://localhost:4000/graphql";
+
 
 /**
  * Registers a new user
  * @param {*} props The initial data for the user
  */
-export const registerUser = (props) => {
+export const registerUser = ({ email, username, password }) => {
   return async (dispatch) => {
     dispatch({ type: REGISTER_USER_START });
 
     const query = {
-        "user": {
-          "email": props?.email,
-          "username": props?.name,
-          "password": props?.password
-        }
-      };
+      user: {
+        email,
+        username,
+        password,
+      },
+    };
 
     fetch(url, {
       method: "POST",
@@ -60,34 +60,48 @@ export const registerUser = (props) => {
  * Logs in a new user, setting the JWT token in localStorage
  * @param {*} props The email and password for the user
  */
-export const loginUser = (props) => {
+export const loginUser = ({ email, password }) => {
   return async (dispatch) => {
     dispatch({ type: LOGIN_USER_START });
 
-    const query = {
-        "user": {
-          "email": props?.email,
-          "password": props?.password
-        }
-      };
+    // const query = {
+    //   user: {
+    //     email,
+    //     password,
+    //   },
+    // };
+
+    const LOGIN_MUTATION = `
+    {
+      email: ${email},
+      password: ${password}
+    }
+    `
+
+    // console.log("[LOGIN_USER QUERY]", JSON.stringify(query ));
 
     fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query })
-          .then((response) => response.json())
-          .then((data) => {
-            dispatch({
-              type: LOGIN_USER_SUCCESS,
-              payload: true,
-            });
-          })
-          .catch((err) => {
-            dispatch({
-              type: LOGIN_USER_FAILURE,
-              payload: "Internal Server Error",
-            });
-          }),
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({query: LOGIN_MUTATION}),
+    })
+      .then((response) => {
+        if (!response.ok) throw new Error(response.status);
+        else return response.json();
+      })
+      .then((data) => {
+        console.log("[LOGIN_USER]", data);
+        dispatch({
+          type: LOGIN_USER_SUCCESS,
+          payload: true,
+        });
+      })
+      .catch((err) => {
+        console.log(typeof err.message);
+        dispatch({
+          type: LOGIN_USER_FAILURE,
+          payload: err.message === "400" ? "Email or password is incorrect" : "Internal Server Error",
+        });
       });
   };
 };

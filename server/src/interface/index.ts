@@ -1,7 +1,13 @@
+
 import { gql } from "apollo-server";
-import { GetUser, AddUser, DeleteUser, UpdateUser, Login, GetPost, AddPost, DeletePost, UpdatePost } from "services";
+
+import { GetUser, AddUser, DeleteUser, UpdateUser, Login, GetPost, AddPost, DeletePost, UpdatePost, GetAllUserPosts } from "services";
+
+// scalar GraphQlObjectId
 
 export const typeDefs = gql`
+    scalar GraphQlObjectId
+
     type User {
         id: ID,
         avatar: String
@@ -24,7 +30,6 @@ export const typeDefs = gql`
     }
 
     type Metadata {
-        userID: String
         hashtags: [String]
     }
 
@@ -34,15 +39,16 @@ export const typeDefs = gql`
 
     type Post {
         id: ID
-        text: String
+        content: String
         file: String
         metadata: Metadata
+        user_id: GraphQlObjectId
         createdAt: String
         updatedAt: String
     }
 
     input PostMutation {
-        text: String!
+        content: String!
         file: String
         metadata: MetadataMutation!
     }
@@ -52,6 +58,7 @@ export const typeDefs = gql`
         users(ids: [ID]): [User]
         login(email: String!, password: String!): Auth
         post(id: ID): Post
+        userPosts(id: ID): [Post]
     }
 
     type Mutation {
@@ -69,6 +76,7 @@ export const resolvers = {
     Query: {
         user: GetUser,
         post: GetPost,
+        userPosts: GetAllUserPosts,
         // users: GetUsers
         login: Login,
     },
